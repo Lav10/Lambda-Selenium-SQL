@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install dependencies
 RUN apt update \
     && apt install -y \
+        sudo \
         curl \
         wget \
         unzip \
@@ -61,22 +62,21 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
     && apt update \
     && apt install -y google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # Install ChromeDriver
-RUN CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE) \
-    && wget https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && rm chromedriver_linux64.zip \
-    && mv chromedriver /usr/local/bin/chromedriver \
-    && chmod +x /usr/local/bin/chromedriver
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chromedriver-linux64.zip \
+    && sudo unzip chromedriver-linux64.zip \
+    && sudo rm chromedriver-linux64.zip \
+    && sudo mv chromedriver-linux64 /usr/local/bin/chromedriver \
+    && sudo chmod +x /usr/local/bin/chromedriver
 
 # Python Libs
 RUN python3 -m pip install selenium
 
 # Set environment variables
 ENV PATH="/usr/local/bin/chromedriver:$PATH"
-ENV CHROME_PATH="/usr/bin/google-chrome"
+# ENV CHROME_PATH="/usr/bin/google-chrome"
 
 # Copy the function code
 COPY app.py /usr/src/app/app.py

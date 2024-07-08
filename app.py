@@ -18,12 +18,15 @@ if __name__=='__main__':
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-gpu')  # Needed for running headless on Windows
     chrome_options.add_argument('--window-size=1920,1200')  # Set window size to avoid issues in headless mode
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument("--remote-debugging-port=9230")
 
     if os.path.exists(os.path.join(cwd, 'annual-enterprise-survey-2023-financial-year-provisional.csv')):
         os.remove(os.path.join(cwd, 'annual-enterprise-survey-2023-financial-year-provisional.csv'))
 
     # Set up the Chrome driver (ensure you have the correct path to chromedriver)
-    service = Service('./chromedriver')
+    service = Service('/usr/local/bin/chromedriver')
     driver = webdriver.Chrome(options=chrome_options)
 
     # Navigate to the website
@@ -35,4 +38,6 @@ if __name__=='__main__':
 
     time.sleep(3)
     # Close the browser after the download is complete (optional)
+    driver.stop_client()
+    driver.close()
     driver.quit()
