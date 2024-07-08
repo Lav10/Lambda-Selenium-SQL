@@ -72,7 +72,7 @@ RUN CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_R
     && chmod +x /usr/local/bin/chromedriver
 
 # Python Libs
-RUN python3 -m pip install -y selenium
+RUN python3 -m pip install selenium
 
 # Set environment variables
 ENV PATH="/usr/local/bin/chromedriver:$PATH"
